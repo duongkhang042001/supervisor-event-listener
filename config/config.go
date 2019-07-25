@@ -3,11 +3,12 @@ package config
 import (
 	"flag"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/utils"
 	"gopkg.in/ini.v1"
 	"os"
 	"strings"
-)
+
+	"github.com/lwldcr/supervisor-event-listener/utils"
+	)
 
 type Config struct {
 	NotifyType string
@@ -15,6 +16,12 @@ type Config struct {
 	MailServer MailServer
 	MailUser   MailUser
 	Slack      Slack
+	WorkWeixin WorkWeixin
+}
+
+type WorkWeixin struct {
+	Endpoint string
+	MentionedList []string
 }
 
 type WebHook struct {
@@ -54,7 +61,7 @@ func ParseConfig() *Config {
 	section := file.Section("default")
 	notifyType := section.Key("notify_type").String()
 	notifyType = strings.TrimSpace(notifyType)
-	if !utils.InStringSlice([]string{"mail", "slack", "webhook"}, notifyType) {
+	if !utils.InStringSlice([]string{"mail", "slack", "webhook", "workweixin"}, notifyType) {
 		Exit("不支持的通知类型-" + notifyType)
 	}
 
@@ -68,6 +75,8 @@ func ParseConfig() *Config {
 		config.Slack = parseSlack(section)
 	case "webhook":
 		config.WebHook = parseWebHook(section)
+	case "workweixin":
+		config.WorkWeixin = parseWorkWeixin(section)
 	}
 
 	return config
@@ -133,6 +142,25 @@ func parseWebHook(section *ini.Section) WebHook {
 
 	return webHook
 }
+
+func parseWorkWeixin(section *ini.Section) WorkWeixin {
+	endpoint := section.Key("workweixin.endpoint").String()
+	endpoint = strings.TrimSpace(endpoint)
+	if endpoint == "" {
+		Exit("WorkWeixin地址配置错误")
+	}
+	mentionedList := section.Key("workweixin.mentioned_list").String()
+	if mentionedList == "" {
+		Exit("WorkWeixin通知人员配置错误")
+	}
+	names := strings.Split(mentionedList, ",")
+	wx := WorkWeixin{
+		Endpoint:endpoint,
+		MentionedList:names,
+	}
+	return wx
+}
+
 
 func Exit(msg string) {
 	fmt.Fprintln(os.Stderr, msg)

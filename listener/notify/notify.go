@@ -1,12 +1,12 @@
 package notify
 
 import (
-	"github.com/ouqiang/supervisor-event-listener/config"
-	"github.com/ouqiang/supervisor-event-listener/event"
-
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/lwldcr/supervisor-event-listener/config"
+	"github.com/lwldcr/supervisor-event-listener/event"
 )
 
 var (
@@ -40,6 +40,8 @@ func start() {
 			notifyHandler = &Slack{}
 		case "webhook":
 			notifyHandler = &WebHook{}
+		case "workweixin":
+			notifyHandler = &WorkWeixin{}
 		}
 		if notifyHandler == nil {
 			continue

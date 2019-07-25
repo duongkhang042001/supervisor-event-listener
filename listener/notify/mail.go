@@ -3,9 +3,10 @@ package notify
 import (
 	"errors"
 	"fmt"
-	"github.com/go-gomail/gomail"
-	"github.com/ouqiang/supervisor-event-listener/event"
 	"strings"
+
+	"github.com/go-gomail/gomail"
+	"github.com/lwldcr/supervisor-event-listener/event"
 )
 
 type Mail struct{}

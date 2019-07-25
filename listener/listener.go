@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/ouqiang/supervisor-event-listener/event"
-	"github.com/ouqiang/supervisor-event-listener/listener/notify"
 	"log"
 	"os"
+
+	"github.com/lwldcr/supervisor-event-listener/event"
+	"github.com/lwldcr/supervisor-event-listener/listener/notify"
 )
 
 var (
