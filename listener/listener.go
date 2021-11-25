@@ -39,8 +39,8 @@ func listen() {
 			failure(err)
 			continue
 		}
-		fmt.Fprintln(os.Stdout, "eventName:", header.EventName)
-		if header.EventName == "PROCESS_STATE_EXITED" || header.EventName == "PROCESS_STATE_STARTING" {
+		// 只处理进程异常退出事件
+		if header.EventName == "PROCESS_STATE_EXITED" {
 			notify.Push(header, payload)
 		}
 		success()
@@ -88,10 +88,10 @@ func ready() {
 }
 
 func success() {
-	fmt.Fprint(os.Stdout, "RESULT 2\nOK\n")
+	fmt.Fprint(os.Stdout, "RESULT 2\nOK")
 }
 
 func failure(err error) {
 	fmt.Fprintln(os.Stderr, err)
-	fmt.Fprint(os.Stdout, "Result 2\nFAIL\n")
+	fmt.Fprint(os.Stdout, "Result 2\nFAIL")
 }
