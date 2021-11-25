@@ -1,9 +1,10 @@
-module github.com/lwldcr/supervisor-event-listener
+module github.com/ouqiang/supervisor-event-listener
 
 go 1.17
 
 require (
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
+	github.com/lwldcr/supervisor-event-listener v0.0.0-20190725062654-6f1133b76878
 	gopkg.in/ini.v1 v1.28.0
 )
 
