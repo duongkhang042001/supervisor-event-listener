@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/lwldcr/supervisor-event-listener/utils/httpclient"
-	"github.com/lwldcr/supervisor-event-listener/event"
-	"github.com/lwldcr/supervisor-event-listener/utils"
+	"supervisor-event-listener/event"
+	"supervisor-event-listener/utils"
+	"supervisor-event-listener/utils/httpclient"
 )
 
 type Slack struct{}

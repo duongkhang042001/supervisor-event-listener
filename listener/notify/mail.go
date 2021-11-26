@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-gomail/gomail"
-	"github.com/lwldcr/supervisor-event-listener/event"
+	"supervisor-event-listener/event"
 )
 
 type Mail struct{}

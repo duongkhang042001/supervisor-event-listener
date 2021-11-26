@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/lwldcr/supervisor-event-listener/config"
-	"github.com/lwldcr/supervisor-event-listener/event"
+	"supervisor-event-listener/config"
+	"supervisor-event-listener/event"
 )
 
 var (
@@ -28,11 +28,23 @@ func Push(header *event.Header, payload *event.Payload) {
 	queue <- event.Message{header, payload}
 }
 
+func validEvent(ev event.Message) bool {
+	for _, name := range Conf.WatchEvents {
+		if ev.Header.EventName == name {
+			return true
+		}
+	}
+	return false
+}
+
 func start() {
 	var message event.Message
 	var notifyHandler Notifiable
 	for {
 		message = <-queue
+		if !validEvent(message) {
+			continue
+		}
 		switch Conf.NotifyType {
 		case "mail":
 			notifyHandler = &Mail{}

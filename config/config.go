@@ -7,20 +7,21 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lwldcr/supervisor-event-listener/utils"
-	)
+	"supervisor-event-listener/utils"
+)
 
 type Config struct {
-	NotifyType string
-	WebHook    WebHook
-	MailServer MailServer
-	MailUser   MailUser
-	Slack      Slack
-	WorkWeixin WorkWeixin
+	NotifyType  string
+	WebHook     WebHook
+	MailServer  MailServer
+	MailUser    MailUser
+	Slack       Slack
+	WorkWeixin  WorkWeixin
+	WatchEvents []string
 }
 
 type WorkWeixin struct {
-	Endpoint string
+	Endpoint      string
 	MentionedList []string
 }
 
@@ -64,9 +65,22 @@ func ParseConfig() *Config {
 	if !utils.InStringSlice([]string{"mail", "slack", "webhook", "workweixin"}, notifyType) {
 		Exit("不支持的通知类型-" + notifyType)
 	}
-
+	eventStr := section.Key("watch_events").String()
+	events := strings.Split(strings.TrimSpace(eventStr), ",")
 	config := &Config{}
 	config.NotifyType = notifyType
+	validEvents := make([]string, 0, len(events))
+	for _, ev := range events {
+		if strings.HasPrefix(ev, "PROCESS_STATE_") {
+			validEvents = append(validEvents, ev)
+		}
+	}
+	if len(validEvents) <= 0 {
+		validEvents = []string{
+			"PROCESS_STATE_EXITED", // default notify exit events
+		}
+	}
+	config.WatchEvents = validEvents
 	switch notifyType {
 	case "mail":
 		config.MailServer = parseMailServer(section)
@@ -155,12 +169,11 @@ func parseWorkWeixin(section *ini.Section) WorkWeixin {
 	}
 	names := strings.Split(mentionedList, ",")
 	wx := WorkWeixin{
-		Endpoint:endpoint,
-		MentionedList:names,
+		Endpoint:      endpoint,
+		MentionedList: names,
 	}
 	return wx
 }
-
 
 func Exit(msg string) {
 	fmt.Fprintln(os.Stderr, msg)

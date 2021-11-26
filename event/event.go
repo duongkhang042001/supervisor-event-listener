@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lwldcr/supervisor-event-listener/utils"
+	"supervisor-event-listener/utils"
 )
 
 // Message 消息格式

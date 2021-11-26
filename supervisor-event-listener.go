@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lwldcr/supervisor-event-listener/listener"
+	"supervisor-event-listener/listener"
 )
 
 func main() {

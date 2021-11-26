@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/lwldcr/supervisor-event-listener/event"
-	"github.com/lwldcr/supervisor-event-listener/listener/notify"
+	"supervisor-event-listener/event"
+	"supervisor-event-listener/listener/notify"
 )
 
 var (
@@ -40,7 +40,7 @@ func listen() {
 			continue
 		}
 		// 只处理进程异常退出事件
-		if header.EventName == "PROCESS_STATE_EXITED" {
+		if header.EventName == "PROCESS_STATE_EXITED" || header.EventName == "PROCESS_STATE_RUNNING" {
 			notify.Push(header, payload)
 		}
 		success()
@@ -83,6 +83,9 @@ func readPayload(reader *bufio.Reader, payloadLen int) (*event.Payload, error) {
 	return payload, nil
 }
 
+// 注意：supervisor只允许往stdout输出特定的字符如：
+// READY RESULT 2 OK FAIL \n
+// 参考：http://supervisord.org/events.html
 func ready() {
 	fmt.Fprint(os.Stdout, "READY\n")
 }
