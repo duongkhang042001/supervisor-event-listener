@@ -10,6 +10,12 @@ import (
 	"supervisor-event-listener/utils"
 )
 
+const msgTpl = `Host: %s
+Process: %s
+Pid: %d
+State: FROM %s TO %s
+`
+
 // Message 消息格式
 type Message struct {
 	Header  *Header
@@ -17,8 +23,8 @@ type Message struct {
 }
 
 func (msg *Message) String() string {
-	return fmt.Sprintf("Host: %s\nProcess: %s\nPID: %d\nEXITED FROM state: %s", msg.Payload.Ip, msg.Payload.ProcessName, msg.Payload.Pid, msg.Payload.FromState)
-
+	return fmt.Sprintf(msgTpl, msg.Payload.Ip, msg.Payload.ProcessName,
+		msg.Payload.Pid, msg.Payload.FromState, msg.Header.EventName)
 }
 
 // Header Supervisord触发事件时会先发送Header，根据Header中len字段去读取Payload
